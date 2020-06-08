@@ -1,0 +1,24 @@
+{
+    "name": "karolkrupa/fail2ban-bundle",
+    "description": "Fail2BanBundle like fail2ban from linux",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karol Krupa",
+            "email": "karo2krupa@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1.3",
+        "symfony/security-bundle": "4.4.*",
+        "symfony/framework-bundle": "4.4.*",
+        "doctrine/doctrine-bundle": "^2.1",
+        "symfony/orm-pack": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "KarolKrupa\\Fail2banBundle\\": "."
+        }
+    }
+}

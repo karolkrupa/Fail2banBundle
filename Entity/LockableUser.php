@@ -15,7 +15,7 @@ interface LockableUser
 
     public function isLocked(): bool;
 
-    public function setLockedAt(?\DateTime $dateTime);
+    public function setLockedAt(?\DateTimeInterface $dateTime);
 
     public function getLockedAt(): ?\DateTimeInterface;
 }

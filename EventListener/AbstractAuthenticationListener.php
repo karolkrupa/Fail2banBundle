@@ -82,7 +82,7 @@ abstract class AbstractAuthenticationListener
         $expirationDate = new \DateTime();
         $expirationDate->modify('- '. $this->config['block_for']);
 
-        if($expirationDate < $this->userHandler->getLockDate($user)) {
+        if($expirationDate > $this->userHandler->getLockDate($user)) {
             $this->storageProvider->resetFailures($user);
             $this->userHandler->unlock($user);
             return true;

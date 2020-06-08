@@ -13,5 +13,7 @@ interface UserHandler
 {
     public function lock(UserInterface $user);
 
+    public function isLocked(UserInterface $user): bool;
+
     public function unlock(UserInterface $user);
 }

@@ -7,9 +7,7 @@
 namespace KarolKrupa\Fail2banBundle\EventListener;
 
 
-use KarolKrupa\Fail2banBundle\Entity\LockableUser;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
-
 
 class AuthenticationFailureListener extends AbstractAuthenticationListener
 {
@@ -17,9 +15,7 @@ class AuthenticationFailureListener extends AbstractAuthenticationListener
     {
         if ($this->isDisabled()) return;
         $user = $this->getUser($event->getAuthenticationToken());
-        if ($user instanceof LockableUser) {
-            $this->lockUserIfLimitReached($user);
-            $this->storageProvider->logFailure($user);
-        }
+        $this->lockUserIfLimitReached($user);
+        $this->storageProvider->logFailure($user);
     }
 }

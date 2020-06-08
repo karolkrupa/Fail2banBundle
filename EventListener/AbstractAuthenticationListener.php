@@ -7,9 +7,8 @@
 namespace KarolKrupa\Fail2banBundle\EventListener;
 
 
-use KarolKrupa\Fail2banBundle\Entity\LockableUser;
 use KarolKrupa\Fail2banBundle\StorageProvider;
-use Doctrine\ORM\EntityManagerInterface;
+use KarolKrupa\Fail2banBundle\UserHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -29,46 +28,56 @@ abstract class AbstractAuthenticationListener
      */
     protected $storageProvider;
 
+    /**
+     * @var array
+     */
     protected $config;
 
-    protected $em;
+    /**
+     * @var UserHandler
+     */
+    protected $userHandler;
 
-    public function __construct(UserProviderInterface $userProvider, StorageProvider $storageProvider, EntityManagerInterface $em, $config)
+    public function __construct(
+        UserProviderInterface $userProvider,
+        StorageProvider $storageProvider,
+        UserHandler $userHandler,
+        $config
+    )
     {
         $this->userProvider = $userProvider;
         $this->storageProvider = $storageProvider;
         $this->config = $config;
-        $this->em = $em;
+        $this->userHandler = $userHandler;
     }
 
-    protected function getUser(TokenInterface $token): ?UserInterface {
+    protected function getUser(TokenInterface $token): ?UserInterface
+    {
         try {
             return $this->userProvider->loadUserByUsername($token->getUsername());
-        }catch (UsernameNotFoundException $exception) {
+        } catch (UsernameNotFoundException $exception) {
             return null;
         }
     }
 
-    protected function lockUserIfLimitReached(UserInterface $user) {
-        if($user instanceof LockableUser) {
-            dump($this->storageProvider->getFailuresCount($user, new \DateTime()));
-            if($this->storageProvider->getFailuresCount($user, new \DateTime()) > $this->config['allowed_attempts_count']) {
-                $user->lock();
-            }
+    protected function lockUserIfLimitReached(UserInterface $user)
+    {
+        if ($this->storageProvider->getFailuresCount($user, new \DateTime()) > $this->config['allowed_attempts_count']) {
+            $this->userHandler->lock($user);
         }
 
         $this->denyAccessIfLocked($user);
     }
 
-    protected function denyAccessIfLocked(UserInterface $user) {
-        if($user instanceof LockableUser) {
-            if($user->isLocked()) {
-                throw new HttpException(Response::HTTP_TOO_MANY_REQUESTS);
-            }
+    protected function denyAccessIfLocked(UserInterface $user)
+    {
+        if ($this->userHandler->isLocked($user)) {
+            throw new HttpException(Response::HTTP_TOO_MANY_REQUESTS);
         }
     }
 
-    protected function isDisabled(): bool {
+    protected function isDisabled(): bool
+    {
         return !$this->config['enabled'];
     }
 }

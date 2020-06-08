@@ -27,3 +27,9 @@ services:
 
   KarolKrupa\Fail2banBundle\StorageProvider:
     alias: fail2ban_storage_provider
+
+  fail2ban_user_handler:
+    class: KarolKrupa\Fail2banBundle\DefaultUserHandler
+
+  KarolKrupa\Fail2banBundle\UserHandler:
+    alias: fail2ban_user_handler

@@ -63,7 +63,7 @@ abstract class AbstractAuthenticationListener
     protected function lockUserIfLimitReached(UserInterface $user)
     {
         $this->unlockUserIfLockExpired($user);
-        if ($this->storageProvider->getFailuresCount($user, new \DateTime()) > $this->config['allowed_attempts_count']) {
+        if ($this->storageProvider->getFailuresCount($user, new \DateTime()) >= $this->config['allowed_attempts_count']) {
             $this->userHandler->lock($user);
         }
 

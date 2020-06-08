@@ -15,8 +15,6 @@ services:
 
   fail2ban_authentication_failure_listener:
     class: KarolKrupa\Fail2banBundle\EventListener\AuthenticationFailureListener
-    arguments:
-      $config: []
     tags:
       - name: kernel.event_listener
         event: security.authentication.failure
@@ -33,3 +31,11 @@ services:
 
   KarolKrupa\Fail2banBundle\UserHandler:
     alias: fail2ban_user_handler
+
+  fail2ban_config_provider:
+    class: \KarolKrupa\Fail2banBundle\DefaultConfigProvider
+    arguments:
+      $config: []
+
+  KarolKrupa\Fail2banBundle\ConfigProvider:
+    alias: fail2ban_config_provider

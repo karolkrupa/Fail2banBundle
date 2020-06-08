@@ -7,6 +7,7 @@
 namespace KarolKrupa\Fail2banBundle\EventListener;
 
 
+use KarolKrupa\Fail2banBundle\ConfigProvider;
 use KarolKrupa\Fail2banBundle\StorageProvider;
 use KarolKrupa\Fail2banBundle\UserHandler;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,9 +30,9 @@ abstract class AbstractAuthenticationListener
     protected $storageProvider;
 
     /**
-     * @var array
+     * @var ConfigProvider
      */
-    protected $config;
+    protected $configProvider;
 
     /**
      * @var UserHandler
@@ -42,12 +43,12 @@ abstract class AbstractAuthenticationListener
         UserProviderInterface $userProvider,
         StorageProvider $storageProvider,
         UserHandler $userHandler,
-        $config
+        ConfigProvider $configProvider
     )
     {
         $this->userProvider = $userProvider;
         $this->storageProvider = $storageProvider;
-        $this->config = $config;
+        $this->configProvider = $configProvider;
         $this->userHandler = $userHandler;
     }
 
@@ -63,7 +64,8 @@ abstract class AbstractAuthenticationListener
     protected function lockUserIfLimitReached(UserInterface $user)
     {
         $this->unlockUserIfLockExpired($user);
-        if ($this->storageProvider->getFailuresCount($user, new \DateTime()) >= $this->config['allowed_attempts_count']) {
+        $failuresCount = $this->storageProvider->getFailuresCount($user, new \DateTime());
+        if ($failuresCount >= $this->configProvider->get('allowed_attempts_count')) {
             $this->userHandler->lock($user);
         }
 
@@ -80,7 +82,7 @@ abstract class AbstractAuthenticationListener
     protected function unlockUserIfLockExpired(UserInterface $user): bool {
         if(!$this->userHandler->isLocked($user)) return false;
         $expirationDate = new \DateTime();
-        $expirationDate->modify('- '. $this->config['block_for']);
+        $expirationDate->modify('- '. $this->configProvider->get('block_for'));
 
         if($expirationDate > $this->userHandler->getLockDate($user)) {
             $this->storageProvider->resetFailures($user);
@@ -93,6 +95,6 @@ abstract class AbstractAuthenticationListener
 
     protected function isDisabled(): bool
     {
-        return !$this->config['enabled'];
+        return !$this->configProvider->get('enabled');
     }
 }

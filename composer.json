@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "KarolKrupa\\Fail2banBundle\\": "."
+            "KarolKrupa\\Fail2banBundle\\": ""
         }
     }
 }

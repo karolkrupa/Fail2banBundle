@@ -5,7 +5,7 @@ services:
 
   # https://symfony.com/doc/current/components/security/authentication.html#authentication-events
   fail2ban_authentication_success_listener:
-    class: App\KarolKrupa\Fail2banBundle\EventListener\AuthenticationSuccessListener
+    class: KarolKrupa\Fail2banBundle\EventListener\AuthenticationSuccessListener
     arguments:
       $config: []
     tags:
@@ -14,7 +14,7 @@ services:
         method: 'onAuthenticationSuccess'
 
   fail2ban_authentication_failure_listener:
-    class: App\KarolKrupa\Fail2banBundle\EventListener\AuthenticationFailureListener
+    class: KarolKrupa\Fail2banBundle\EventListener\AuthenticationFailureListener
     arguments:
       $config: []
     tags:
@@ -23,7 +23,7 @@ services:
         method: 'onAuthenticationFailure'
 
   fail2ban_storage_provider:
-    class: App\KarolKrupa\Fail2banBundle\DefaultStorageProvider
+    class: KarolKrupa\Fail2banBundle\DefaultStorageProvider
 
-  App\KarolKrupa\Fail2banBundle\StorageProvider:
+  KarolKrupa\Fail2banBundle\StorageProvider:
     alias: fail2ban_storage_provider

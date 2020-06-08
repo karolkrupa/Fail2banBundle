@@ -22,15 +22,16 @@ class DefaultUserHandler implements UserHandler
 
     public function lock(UserInterface $user)
     {
-        if ($user instanceof LockableUser) {
+        if ($user instanceof LockableUser && !$user->isLocked()) {
             $user->lock();
+            $user->setLockedAt(new \DateTime());
             $this->em->flush();
         }
     }
 
     public function unlock(UserInterface $user)
     {
-        if ($user instanceof LockableUser) {
+        if ($user instanceof LockableUser && $user->isLocked()) {
             $user->unlock();
             $this->em->flush();
         }
@@ -43,5 +44,16 @@ class DefaultUserHandler implements UserHandler
         }
 
         return false;
+    }
+
+    public function getLockDate(UserInterface $user): \DateTimeInterface
+    {
+        $lockDate = \DateTime::createFromFormat('Y', '1997');
+        if ($user instanceof LockableUser) {
+            if($user->getLockedAt()) {
+                return $user->getLockedAt();
+            }
+        }
+        return $lockDate;
     }
 }

@@ -62,6 +62,7 @@ abstract class AbstractAuthenticationListener
 
     protected function lockUserIfLimitReached(UserInterface $user)
     {
+        $this->unlockUserIfLockExpired($user);
         if ($this->storageProvider->getFailuresCount($user, new \DateTime()) > $this->config['allowed_attempts_count']) {
             $this->userHandler->lock($user);
         }
@@ -74,6 +75,20 @@ abstract class AbstractAuthenticationListener
         if ($this->userHandler->isLocked($user)) {
             throw new HttpException(Response::HTTP_TOO_MANY_REQUESTS);
         }
+    }
+
+    protected function unlockUserIfLockExpired(UserInterface $user): bool {
+        if(!$this->userHandler->isLocked($user)) return false;
+        $expirationDate = new \DateTime();
+        $expirationDate->modify('- '. $this->config['block_for']);
+
+        if($expirationDate < $this->userHandler->getLockDate($user)) {
+            $this->storageProvider->resetFailures($user);
+            $this->userHandler->unlock($user);
+            return true;
+        }
+
+        return false;
     }
 
     protected function isDisabled(): bool

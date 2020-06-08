@@ -15,5 +15,7 @@ interface UserHandler
 
     public function isLocked(UserInterface $user): bool;
 
+    public function getLockDate(UserInterface $user): \DateTimeInterface;
+
     public function unlock(UserInterface $user);
 }

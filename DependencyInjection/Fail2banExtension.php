@@ -7,6 +7,7 @@
 namespace KarolKrupa\Fail2banBundle\DependencyInjection;
 
 
+use KarolKrupa\Fail2banBundle\ConfigProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -26,7 +27,11 @@ class Fail2banExtension extends Extension
 
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->getDefinition('fail2ban_config_provider')
-            ->replaceArgument('$config', $config);
+        $configProvider = 'fail2ban_config_provider';
+        if(isset($config['config_provider'])) {
+            $configProvider = $config['config_provider'];
+        }
+
+        $container->setAlias(ConfigProvider::class, $configProvider);
     }
 }

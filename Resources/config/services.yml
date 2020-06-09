@@ -35,5 +35,5 @@ services:
     arguments:
       $config: []
 
-  KarolKrupa\Fail2banBundle\ConfigProvider:
-    alias: fail2ban_config_provider
+#  KarolKrupa\Fail2banBundle\ConfigProvider:
+#    alias: fail2ban_config_provider

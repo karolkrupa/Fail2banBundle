@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
             ->booleanNode('enabled')->defaultFalse()->end()
             ->integerNode('allowed_attempts_count')->defaultValue(3)->end()
             ->scalarNode('block_for')->defaultValue('30 days')->end()
+            ->scalarNode('config_provider')->end()
             ->end();
 
         return $treeBuilder;

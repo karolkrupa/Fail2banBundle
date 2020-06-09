@@ -6,8 +6,6 @@ services:
   # https://symfony.com/doc/current/components/security/authentication.html#authentication-events
   fail2ban_authentication_success_listener:
     class: KarolKrupa\Fail2banBundle\EventListener\AuthenticationSuccessListener
-    arguments:
-      $config: []
     tags:
       - name: kernel.event_listener
         event: security.authentication.success

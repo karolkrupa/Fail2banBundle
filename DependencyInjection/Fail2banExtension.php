@@ -26,9 +26,7 @@ class Fail2banExtension extends Extension
 
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->getDefinition('fail2ban_authentication_success_listener')
-            ->replaceArgument('$config', $config);
-        $container->getDefinition('fail2ban_authentication_failure_listener')
+        $container->getDefinition('fail2ban_config_provider')
             ->replaceArgument('$config', $config);
     }
 }

@@ -15,7 +15,7 @@ class AuthenticationSuccessListener extends AbstractAuthenticationListener
     {
         if ($this->isDisabled()) return;
         $user = $this->getUser($event->getAuthenticationToken());
-
+        if(!$user) return;
         $this->lockUserIfLimitReached($user);
     }
 }

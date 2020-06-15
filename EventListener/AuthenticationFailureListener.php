@@ -15,6 +15,7 @@ class AuthenticationFailureListener extends AbstractAuthenticationListener
     {
         if ($this->isDisabled()) return;
         $user = $this->getUser($event->getAuthenticationToken());
+        if(!$user) return;
         $this->lockUserIfLimitReached($user);
         $this->storageProvider->logFailure($user);
     }

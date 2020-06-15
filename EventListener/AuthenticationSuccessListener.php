@@ -17,5 +17,6 @@ class AuthenticationSuccessListener extends AbstractAuthenticationListener
         $user = $this->getUser($event->getAuthenticationToken());
         if(!$user) return;
         $this->lockUserIfLimitReached($user);
+        $this->storageProvider->resetFailures($user);
     }
 }

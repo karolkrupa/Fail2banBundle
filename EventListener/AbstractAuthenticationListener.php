@@ -67,6 +67,7 @@ abstract class AbstractAuthenticationListener
         $failuresCount = $this->storageProvider->getFailuresCount($user, new \DateTime());
         if ($failuresCount >= $this->configProvider->get('allowed_attempts_count')) {
             $this->userHandler->lock($user);
+            $this->storageProvider->resetFailures($user);
         }
 
         $this->denyAccessIfLocked($user);

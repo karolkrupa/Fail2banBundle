@@ -7,11 +7,11 @@
 namespace KarolKrupa\Fail2banBundle\EventListener;
 
 
-use Symfony\Component\Security\Core\Event\AuthenticationEvent;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class AuthenticationSuccessListener extends AbstractAuthenticationListener
 {
-    public function onAuthenticationSuccess(AuthenticationEvent $event)
+    public function onAuthenticationSuccess(InteractiveLoginEvent $event)
     {
         if ($this->isDisabled()) return;
         $user = $this->getUser($event->getAuthenticationToken());
